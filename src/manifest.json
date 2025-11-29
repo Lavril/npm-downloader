@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "NPM Explorer & Downloader",
+  "version": "0.1.0",
+  "description": "Explore npm packages, view dependency tree, graph and download tarballs (latest).",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "NPM Explorer"
+  },
+  "permissions": [
+    "downloads",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@npm-downloader",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NPM Explorer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="header">
+    <h2>NPM Explorer</h2>
+  </div>
+
+  <div class="controls">
+    <label>Registry</label>
+    <input id="registry" type="text" value="https://registry.npmjs.org/" />
+
+    <label>Package name</label>
+    <div class="search-row">
+      <input id="pkg" type="text" placeholder="e.g. react" />
+      <button id="search">Search</button>
+    </div>
+
+    <div class="row">
+      <button id="back" class="secondary" style="display:none;">← Back</button>
+      <button id="show-graph" class="secondary">Show graph</button>
+      <button id="clear-cache" class="secondary">Clear cache</button>
+    </div>
+  </div>
+
+  <div id="status" class="status">Ready</div>
+
+  <!-- Progress area for recursive download -->
+  <div id="progress-area" class="progress-area" style="display:none;">
+    <div class="progress-text" id="progress-text">0 / 0</div>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progress-bar" style="width:0%"></div>
+    </div>
+    <div class="progress-remaining" id="progress-remaining">Осталось: 0</div>
+    <div style="margin-top:6px;">
+      <button id="cancel-download" class="secondary">Cancel</button>
+    </div>
+  </div>
+
+  <div id="output" class="output" aria-live="polite"></div>
+
+  <div id="graph-area" class="graph-area" style="display:none;">
+    <div class="graph-controls">
+      <button id="close-graph" class="secondary">Close graph</button>
+    </div>
+    <svg id="graph" width="600" height="400" role="img" aria-label="Dependency graph"></svg>
+  </div>
+
+  <!-- d3 for graph -->
+  <script src="libs/d3.v7.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

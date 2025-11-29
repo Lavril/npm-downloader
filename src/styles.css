@@ -1,0 +1,42 @@
+:root{
+  --muted:#6b7280;
+  --accent:#0ea5a1;
+}
+body{
+  font-family: Inter, Roboto, Arial, sans-serif;
+  width: 700px;
+  padding: 12px;
+  background: #f6f8fa;
+  color: #111827;
+}
+.header h2{margin:0 0 8px 0}
+.controls{margin-bottom:8px}
+.controls label{display:block;font-size:12px;color:var(--muted);margin-top:6px}
+input[type=text]{width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px}
+.search-row{display:flex;gap:6px}
+.search-row input{flex:1}
+button{padding:6px 8px;border-radius:6px;border:1px solid #c7cbd1;background:white;cursor:pointer}
+button.secondary{background:#f3f4f6}
+.row{display:flex;gap:6px;margin-top:8px}
+.status{margin:8px 0;font-size:13px;color:#374151}
+.output{background:#fff;border:1px solid #e5e7eb;padding:8px;border-radius:6px;max-height:420px;overflow:auto}
+.pack-info{padding:6px;border-bottom:1px solid #ececec}
+.pack-header{display:flex;justify-content:space-between;align-items:center}
+.meta{font-size:13px;color:#6b7280}
+.deps-header{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.deps-list{margin-top:6px}
+.dependency{display:flex;align-items:center;gap:8px;padding:6px;border-radius:4px}
+.dependency:hover{background:#f8fafc}
+.toggle{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid #e5e7eb;cursor:pointer}
+.checkbox{margin-right:6px}
+.controls small{color:var(--muted)}
+.error-panel{background:#fff1f0;border:1px solid #fecaca;padding:8px;border-radius:6px;color:#7f1d1d;font-family:monospace}
+.graph-area{margin-top:8px}
+#graph{border:1px solid #e5e7eb;background:white}
+
+/* Progress area */
+.progress-area{background:#fff;padding:8px;border:1px solid #e6eef0;border-radius:6px;margin:8px 0}
+.progress-text{font-size:13px;margin-bottom:6px}
+.progress-bar-outer{width:100%;height:12px;background:#e6eef0;border-radius:8px;overflow:hidden}
+.progress-bar-inner{height:100%;background:linear-gradient(90deg,var(--accent),#06b6d4);width:0%}
+.progress-remaining{font-size:12px;color:var(--muted);margin-top:6px}
