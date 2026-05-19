@@ -12,7 +12,8 @@
     "storage"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "https://registry.npmjs.org/*",
+    "https://*.npmjs.org/*"
   ],
   "icons": {
     "16": "icons/icon16.png",

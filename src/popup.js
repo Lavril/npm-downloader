@@ -397,64 +397,119 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) { console.warn('graph fetch err', e); }
     }
 
-    renderD3(nodes, links);
+    renderGraph(nodes, links);
   }
 
-  function renderD3(nodes, links) {
-    if (typeof d3 === 'undefined') { setStatus('d3 not available (place libs/d3.v7.min.js)', true); return; }
+  function renderGraph(nodes, links) {
     graphArea.style.display = 'block';
-    // clear svg children
-    while (graphSvg.firstChild) graphSvg.removeChild(graphSvg.firstChild);
+
+    while (graphSvg.firstChild) {
+      graphSvg.removeChild(graphSvg.firstChild);
+    }
+
     const width = graphSvg.clientWidth || 600;
     const height = graphSvg.clientHeight || 400;
-    const svg = d3.select('#graph').attr('viewBox', [0,0,width,height]);
 
-    const simulation = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(60).strength(0.7))
-      .force('charge', d3.forceManyBody().strength(-200))
-      .force('center', d3.forceCenter(width/2, height/2));
+    // --- простая раскладка (force-like) ---
+    const positions = {};
+    const centerX = width / 2;
+    const centerY = height / 2;
 
-    const link = svg.append('g')
-      .attr('stroke','#999')
-      .attr('stroke-opacity',0.6)
-      .selectAll('line')
-      .data(links)
-      .join('line')
-      .attr('stroke-width',1);
+    const radius = Math.min(width, height) / 3;
 
-    const node = svg.append('g')
-      .attr('stroke','#fff')
-      .attr('stroke-width',1.2)
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r',8)
-      .call(d3.drag()
-        .on('start', (event, d)=> { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
-        .on('drag', (event, d)=> { d.fx = event.x; d.fy = event.y; })
-        .on('end', (event, d)=> { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
-      );
+    nodes.forEach((node, i) => {
+      const angle = (i / nodes.length) * Math.PI * 2;
+      positions[node.id] = {
+        x: centerX + radius * Math.cos(angle),
+        y: centerY + radius * Math.sin(angle)
+      };
+    });
 
-    const labels = svg.append('g')
-      .selectAll('text')
-      .data(nodes)
-      .join('text')
-      .text(d => d.id)
-      .attr('font-size', 10)
-      .attr('dx', 10)
-      .attr('dy', 3);
+    // --- линии ---
+    links.forEach(link => {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
 
-    node.append('title').text(d => d.id);
+      const from = positions[link.source];
+      const to = positions[link.target];
 
-    simulation.on('tick', ()=> {
-      link
-        .attr('x1', d => d.source.x)
-        .attr('y1', d => d.source.y)
-        .attr('x2', d => d.target.x)
-        .attr('y2', d => d.target.y);
+      line.setAttribute('x1', from.x);
+      line.setAttribute('y1', from.y);
+      line.setAttribute('x2', to.x);
+      line.setAttribute('y2', to.y);
+      line.setAttribute('stroke', '#999');
+      line.setAttribute('stroke-width', '1');
 
-      node.attr('cx', d => d.x).attr('cy', d => d.y);
-      labels.attr('x', d => d.x).attr('y', d => d.y);
+      graphSvg.appendChild(line);
+    });
+
+    // --- ноды ---
+    nodes.forEach(node => {
+      const pos = positions[node.id];
+
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', pos.x);
+      circle.setAttribute('cy', pos.y);
+      circle.setAttribute('r', 8);
+      circle.setAttribute('fill', '#2563eb');
+
+      // drag
+      let isDragging = false;
+
+      circle.addEventListener('mousedown', () => {
+        isDragging = true;
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        const rect = graphSvg.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+
+        // обновляем линии
+        links.forEach(l => {
+          if (l.source === node.id || l.target === node.id) {
+            const lines = graphSvg.querySelectorAll('line');
+            lines.forEach(line => {
+              const lx1 = line.getAttribute('x1');
+              const ly1 = line.getAttribute('y1');
+              const lx2 = line.getAttribute('x2');
+              const ly2 = line.getAttribute('y2');
+
+              const from = positions[l.source];
+              const to = positions[l.target];
+
+              if (l.source === node.id) {
+                line.setAttribute('x1', x);
+                line.setAttribute('y1', y);
+              }
+
+              if (l.target === node.id) {
+                line.setAttribute('x2', x);
+                line.setAttribute('y2', y);
+              }
+            });
+          }
+        });
+      });
+
+      graphSvg.appendChild(circle);
+
+      // текст
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', pos.x + 10);
+      text.setAttribute('y', pos.y + 4);
+      text.setAttribute('font-size', '10');
+      text.textContent = node.id;
+
+      graphSvg.appendChild(text);
     });
   }
 
