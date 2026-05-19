@@ -2,6 +2,12 @@
 
 Chrome extension to explore npm packages, view dependency trees, and download package tarballs (latest).
 
+## Install
+
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-blue?logo=googlechrome)](https://chromewebstore.google.com/detail/npm-explorer-downloader/pppnbibhfcbkjgdljlnpcppbjbjmhhah?hl=ru)
+
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-orange?logo=firefoxbrowser)](https://addons.mozilla.org/ru/firefox/addon/npm-explorer-downloader/)
+
 ## Features
 
 - Search npm packages by name (configurable registry)
